@@ -123,6 +123,24 @@ btnAbrirModal.addEventListener("click", () => {
   tareaEditandoId = null;
   formCrearTarea.reset();
   modalTitulo.textContent = "Crear Nueva Tarea";
+
+  // Cargar usuarios y llenar el select antes de mostrar el modal
+  fetch("http://127.0.0.1/usuario")
+    .then(response => response.json())
+    .then(data => {
+      const select = formCrearTarea.usuario_id;
+      select.innerHTML = `<option value="">Seleccione un usuario</option>`;
+      data.usuarios.forEach(usuario => {
+        const option = document.createElement("option");
+        option.value = usuario.id;
+        option.textContent = usuario.nombre;
+        select.appendChild(option);
+      });
+    })
+    .catch(error => {
+      alert("Error al cargar usuarios: " + error.message);
+    });
+
   modalCrear.classList.add("active");
 });
 
