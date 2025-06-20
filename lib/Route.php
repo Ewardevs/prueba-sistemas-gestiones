@@ -6,6 +6,8 @@ class Route
 {
     private static $routes = [];
 
+
+    # Registrar rutas para diferentes metodos HTTP
     public static function get($uri, $callback)
     {
         $uri = trim($uri, "/");
@@ -27,24 +29,28 @@ class Route
         self::$routes["DELETE"][$uri] = $callback;
     }
 
+    # ejecutar rutas
+    # se ejecuta cuando se llama a la ruta
     public static function dispatch()
-    {
+    {   
+        # Obtener la URI y el metodo HTTP
         $uri = $_SERVER["REQUEST_URI"];
         $uri = trim($uri, "/");
 
         $method = $_SERVER["REQUEST_METHOD"];
 
         foreach (self::$routes[$method] as $route => $callback) {
-            # ^ tiene que empezar con la palabra
-            # $ de fin a inicio tiene que ser igual que la palabra
 
             if (strpos($route, ":") !== false) {
                 $route = preg_replace('#:[a-zA-Z0-9]+#', '([a-zA-Z0-9]+)', $route);
             }
 
-
+            # ^ tiene que empezar con la palabra
+            # $ de fin a inicio tiene que ser igual que la palabra
+            
             if (preg_match("#^$route$#", $uri, $matches)) {
                 $params = array_slice($matches, 1);
+                # Si es un metodo POST o PUT, obtener el cuerpo de la peticion
                 if (in_array($method, ['POST', 'PUT'])) {
                     $contentType = $_SERVER['CONTENT_TYPE'] ?? '';
                     $body = strpos($contentType, 'application/json') !== false

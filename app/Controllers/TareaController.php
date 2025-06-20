@@ -18,7 +18,11 @@ class TareaController
 
         $tareas = $this->model->getAll();
 
-        return $tareas;
+        return [
+            "mensaje" => "Todas las tareas",
+            "status" => 200,
+            "tareas" => $tareas,
+        ];
     }
 
     public function porId($id)
@@ -28,7 +32,11 @@ class TareaController
             http_response_code(404);
             return ["error" => "Tarea no encontrada", "status" => 404];
         }
-        return $tarea;
+        return [
+            "mensaje" => "Tarea encontrada",
+            "status" => 200,
+            "tareas" => $tarea,
+        ];
     }
 
     public function crear($data)
@@ -43,7 +51,7 @@ class TareaController
         $errores = Validadores::validar($data, $reglas);
 
         if (!empty($errores)) {
-            http_response_code(400);
+            http_response_code(422);
             return ["errores" => $errores];
         }
         $id = $this->model->create([
@@ -54,7 +62,12 @@ class TareaController
         ]);
         if ($id) {
             $tarea = $this->model->byId($id);
-            return ["mensaje" => "Tarea creada con éxito", "tarea" => $tarea];
+            http_response_code(201);
+            return [
+                "mensaje" => "Tarea creada con éxito",
+                "status" => 201,
+                "tareas" => $tarea,
+            ];
         }
         return "Error al crear la tarea";
     }
@@ -104,9 +117,11 @@ class TareaController
         $deleted = $this->model->delete($id);
 
         if ($deleted) {
-            return "Tarea eliminada con ID: " . $id;
+            return [
+                "mensaje" => "Tarea eliminada con éxito",
+                "status" => 200,
+                "tareas" => $tarea,
+            ];
         }
-        http_response_code(404);
-        return ["error" => "Tarea no encontrada o no eliminada", "status" => 404];
     }
 }
