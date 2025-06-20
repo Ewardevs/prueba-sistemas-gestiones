@@ -25,3 +25,5 @@ Agrega la siguiente línea al final del archivo:
 
 3. Reiniciar Apache
 Abre el panel de control de XAMPP y reinicia el servicio de Apache para aplicar los cambios
+
+4. abrir _FRONTEND e iniciar con live server el archivo index.html
