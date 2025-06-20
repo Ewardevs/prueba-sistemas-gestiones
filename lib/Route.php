@@ -44,11 +44,13 @@ class Route
             if (strpos($route, ":") !== false) {
                 $route = preg_replace('#:[a-zA-Z0-9]+#', '([a-zA-Z0-9]+)', $route);
             }
+            # /tareas/([a-zA-Z0-9]+)
 
             # ^ tiene que empezar con la palabra
             # $ de fin a inicio tiene que ser igual que la palabra
             
             if (preg_match("#^$route$#", $uri, $matches)) {
+                # $matches es un array "[0] => /usuarios/42 , [1] => 42]
                 $params = array_slice($matches, 1);
                 # Si es un metodo POST o PUT, obtener el cuerpo de la peticion
                 if (in_array($method, ['POST', 'PUT'])) {
