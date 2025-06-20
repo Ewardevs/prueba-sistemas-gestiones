@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Gestor de Tareas Mejorado</title>
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<header>
+  <h1>Gestor de Tareas</h1>
+  <button id="btnAbrirModal" class="btn-crear">+ Nueva Tarea</button>
+</header>
+
+<main>
+  <section class="tareas-grid" id="tareasContainer"></section>
+</main>
+
+<!-- Modal Crear Tarea -->
+<div id="modalCrear" class="modal">
+  <div class="modal-contenido">
+    <h2 id="modalTitulo">Crear Nueva Tarea</h2>
+
+    <form id="formCrearTarea">
+      <label for="titulo">Título</label>
+      <input type="text" id="titulo" name="titulo" required />
+      
+      <label for="descripcion">Descripción</label>
+      <textarea id="descripcion" name="descripcion" rows="3" required></textarea>
+      
+      <label for="usuario_id">Usuario ID</label>
+      <input type="number" id="usuario_id" name="usuario_id" required min="1" />
+      
+      <div class="modal-botones">
+        <button type="submit" class="btn-guardar">Guardar</button>
+        <button type="button" id="btnCerrarModal" class="btn-cerrar">Cancelar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>

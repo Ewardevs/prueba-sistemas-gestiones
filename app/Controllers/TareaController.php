@@ -17,6 +17,9 @@ class TareaController
     {
 
         $tareas = $this->model->getAll();
+        foreach ($tareas as &$tarea) {
+            $tarea['usuario'] = $this->model->getUser($tarea['usuario_id']);
+        }
 
         return [
             "mensaje" => "Todas las tareas",
@@ -32,6 +35,7 @@ class TareaController
             http_response_code(404);
             return ["error" => "Tarea no encontrada", "status" => 404];
         }
+        $tarea['usuario'] = $this->model->getUser($tarea['usuario_id']);
         return [
             "mensaje" => "Tarea encontrada",
             "status" => 200,
@@ -45,7 +49,7 @@ class TareaController
             "titulo" => "required|string",
             "descripcion" => "required|string",
             "estado" => "required|bool",
-            "usuario_id" => "required|int"
+            "usuario_id" => "required|exists|int"
         ];
 
         $errores = Validadores::validar($data, $reglas);
@@ -60,8 +64,11 @@ class TareaController
             "estado" => $data["estado"],
             "usuario_id" => $data["usuario_id"]
         ]);
+        
         if ($id) {
+
             $tarea = $this->model->byId($id);
+            $tarea['usuario'] = $this->model->getUser($tarea['usuario_id']);
             http_response_code(201);
             return [
                 "mensaje" => "Tarea creada con éxito",
@@ -83,7 +90,7 @@ class TareaController
             "titulo" => "required|string",
             "descripcion" => "required|string",
             "estado" => "required|bool",
-            "usuario_id" => "required|int"
+            "usuario_id" => "required|exists|int"
         ];
 
         $errores = Validadores::validar($data, $reglas);
@@ -92,14 +99,17 @@ class TareaController
             http_response_code(400);
             return ["errores" => $errores];
         }
+
         $updated = $this->model->update($id, [
             "titulo" => $data["titulo"],
             "descripcion" => $data["descripcion"],
             "estado" => $data["estado"],
             "usuario_id" => $data["usuario_id"]
         ]);
+        
         if ($updated) {
             $tarea = $this->model->byId($id);
+            $tarea['usuario'] = $this->model->getUser($tarea['usuario_id']);
             return ["mensaje" => "Tarea actualizada con éxito", "tarea" => $tarea];
         }
         http_response_code(404);
@@ -109,19 +119,34 @@ class TareaController
     public function eliminar($id)
     {
         $tarea = $this->model->byId($id);
+
         if (!$tarea) {
             http_response_code(404);
             return ["error" => "Tarea no encontrada", "status" => 404];
         }
-
+        
         $deleted = $this->model->delete($id);
 
         if ($deleted) {
+
             return [
                 "mensaje" => "Tarea eliminada con éxito",
                 "status" => 200,
                 "tareas" => $tarea,
             ];
         }
+    }
+    public function usuario($id)
+    {
+        $usuario = $this->model->getUser($id);
+        if (!$usuario) {
+            http_response_code(404);
+            return ["error" => "Usuario no encontrado", "status" => 404];
+        }
+        return [
+            "mensaje" => "Usuario encontrado",
+            "status" => 200,
+            "usuario" => $usuario,
+        ];
     }
 }

@@ -80,4 +80,13 @@ class Tarea
         $stmt->bindParam(':id', $id, \PDO::PARAM_INT);
         return $stmt->execute();
     }
+
+    public function getUser($id)
+    {
+        $stmt = $this->connection->prepare("SELECT * FROM usuarios WHERE id = :id");
+        $stmt->bindParam(':id', $id, \PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetch(\PDO::FETCH_ASSOC); // ✅ Esto devuelve la fila como array asociativo
+    }
+    
 }
