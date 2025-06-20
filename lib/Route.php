@@ -6,36 +6,74 @@ class Route
 {
     private static $routes = [];
 
-    public static function get($uri,$callback){
-        $uri = trim($uri,"/");
+    public static function get($uri, $callback)
+    {
+        $uri = trim($uri, "/");
         self::$routes["GET"][$uri] = $callback;
     }
-    public static function post($uri,$callback){
-        $uri = trim($uri,"/");
+    public static function post($uri, $callback)
+    {
+        $uri = trim($uri, "/");
         self::$routes["POST"][$uri] = $callback;
     }
+    public static function put($uri, $callback)
+    {
+        $uri = trim($uri, "/");
+        self::$routes["PUT"][$uri] = $callback;
+    }
+    public static function delete($uri, $callback)
+    {
+        $uri = trim($uri, "/");
+        self::$routes["DELETE"][$uri] = $callback;
+    }
 
-    public static function dispatch(){
+    public static function dispatch()
+    {
         $uri = $_SERVER["REQUEST_URI"];
-        $uri = trim($uri,"/");
+        $uri = trim($uri, "/");
 
         $method = $_SERVER["REQUEST_METHOD"];
-        
-        foreach (self::$routes[$method] as $route => $callback){
+
+        foreach (self::$routes[$method] as $route => $callback) {
             # ^ tiene que empezar con la palabra
             # $ de fin a inicio tiene que ser igual que la palabra
-            if (preg_match("#^$route$#", $uri)){
 
-                if (strpos($route,":") !== false){
-                     
+            if (strpos($route, ":") !== false) {
+                $route = preg_replace('#:[a-zA-Z0-9]+#', '([a-zA-Z0-9]+)', $route);
+            }
+
+
+            if (preg_match("#^$route$#", $uri, $matches)) {
+                $params = array_slice($matches, 1);
+                if (in_array($method, ['POST', 'PUT'])) {
+                    $contentType = $_SERVER['CONTENT_TYPE'] ?? '';
+                    $body = strpos($contentType, 'application/json') !== false
+                        ? json_decode(file_get_contents('php://input'), true)
+                        : $_POST;
+
+                    array_splice($params, 1, 0, [$body]);
                 }
 
-                $callback();
+
+
+                if (is_callable($callback)) {
+                    $response = $callback(...$params);
+                }
+                if (is_array($callback)) {
+                    $controller = new $callback[0];
+                    $response = $controller->{$callback[1]}(...$params);
+                }
+
+                if (is_array($response) || is_object($response)) {
+                    header("Content-Type: application/json");
+                    echo json_encode($response);
+                } else {
+                    echo $response;
+                }
                 return;
             }
         }
 
-        echo"404 not found";
+        echo "404 not found";
     }
-
 }
