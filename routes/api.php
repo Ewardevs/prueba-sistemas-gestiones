@@ -3,6 +3,8 @@
 use App\Controllers\TareaController;
 use Lib\Route;
 
+Route::get("/", [TareaController::class,"index"]);
+
 Route::get("/tareas", [TareaController::class,"todos"]);
 
 Route::post("/tareas", [TareaController::class,"crear"]);

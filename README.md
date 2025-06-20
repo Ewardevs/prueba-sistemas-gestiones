@@ -1,3 +1,4 @@
+##LEER
 Configuración de Dominio Local en XAMPP
 Sigue estos pasos para configurar un dominio local en tu entorno de desarrollo con XAMPP:
 
@@ -26,4 +27,6 @@ Agrega la siguiente línea al final del archivo:
 3. Reiniciar Apache
 Abre el panel de control de XAMPP y reinicia el servicio de Apache para aplicar los cambios
 
-4. abrir _FRONTEND e iniciar con live server el archivo index.html
+4. En el archivo db.sql esta todo la base de datos solo importar u ejecutar las sentencias
+
+5. luego de entrar a la carpeta _FRONTEND y abri el archivo index.html con la extencion live server

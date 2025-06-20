@@ -13,6 +13,15 @@ class TareaController
     {
         $this->model = new Tarea();
     }
+
+    public function index()
+    {
+        return [
+            "Welcome <3" => "Bienvenido a la API de tareas",
+            "mensaje"=>"Agregar '/tareas' al final de la URL para ver las tareas",
+            "status" => 200,
+        ];
+    }   
     public function todos()
     {
 

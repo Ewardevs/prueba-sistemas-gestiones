@@ -7,7 +7,7 @@ class Tarea
     protected $db_host = "localhost";
     protected $db_user = "postgres";
     protected $db_pass = "023148_Er";
-    protected $db_name = "postgres";
+    protected $db_name = "tareas";
 
     protected $connection;
 
