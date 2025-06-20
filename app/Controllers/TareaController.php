@@ -149,4 +149,17 @@ class TareaController
             "usuario" => $usuario,
         ];
     }
+    public function todosUsuarios()
+    {
+        $usuarios = $this->model->getAllUsers();
+        if (!$usuarios) {
+            http_response_code(404);
+            return ["error" => "No se encontraron usuarios", "status" => 404];
+        }
+        return [
+            "mensaje" => "Todos los usuarios",
+            "status" => 200,
+            "usuarios" => $usuarios,
+        ];
+    }
 }

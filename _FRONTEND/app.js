@@ -30,6 +30,9 @@ function cargarTareas() {
 function renderTareas(tareas) {
   tareasContainer.innerHTML = "";
 
+  // Ordenar por fecha_creacion descendente (más reciente primero)
+  tareas.sort((a, b) => new Date(b.fecha_creacion) - new Date(a.fecha_creacion));
+
   tareas.forEach((tarea) => {
     const card = document.createElement("article");
     card.classList.add("tarea-card");
@@ -82,6 +85,7 @@ function renderTareas(tareas) {
 
 function abrirModalConDatos(id) {
   modalTitulo.textContent = "Actualizar Tarea";
+
   const tarea = tareas.find((t) => t.id === id);
   if (!tarea) return;
 
@@ -89,10 +93,31 @@ function abrirModalConDatos(id) {
 
   formCrearTarea.titulo.value = tarea.titulo;
   formCrearTarea.descripcion.value = tarea.descripcion;
-  formCrearTarea.usuario_id.value = tarea.usuario_id;
+
+  // Cargar usuarios y luego seleccionar el correcto
+  fetch("http://127.0.0.1/usuario")
+    .then(response => response.json())
+    .then(data => {
+      const select = formCrearTarea.usuario_id;
+      select.innerHTML = `<option value="">Seleccione un usuario</option>`;
+
+      data.usuarios.forEach(usuario => {
+        const option = document.createElement("option");
+        option.value = usuario.id;
+        option.textContent = usuario.nombre;
+        select.appendChild(option);
+      });
+
+      // Seleccionar el usuario actual de la tarea
+      select.value = tarea.usuario_id;
+    })
+    .catch(error => {
+      alert("Error al cargar usuarios: " + error.message);
+    });
 
   modalCrear.classList.add("active");
 }
+
 
 btnAbrirModal.addEventListener("click", () => {
   tareaEditandoId = null;

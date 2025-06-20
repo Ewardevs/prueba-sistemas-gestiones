@@ -9,6 +9,7 @@ Route::post("/tareas", [TareaController::class,"crear"]);
 Route::put("/tareas/:id", [TareaController::class,"actualizar"]);
 Route::get("/tareas/:id", [TareaController::class,"porId"]);
 Route::delete("/tareas/:id", [TareaController::class,"eliminar"]);
+Route::get("/usuario", [TareaController::class,"todosUsuarios"]);
 Route::get("/usuario/:id", [TareaController::class,"usuario"]);
 
 
